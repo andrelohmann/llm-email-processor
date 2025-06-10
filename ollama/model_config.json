@@ -1,0 +1,26 @@
+{
+  "8": {
+    "comment": "Optimal für 8GB VRAM. Fokus auf kleine, schnelle Modelle.",
+    "classification": "phi3:3.8b-mini-instruct-q4_K_M",
+    "extraction": "phi3:3.8b-mini-instruct-q4_K_M",
+    "summarization": "mistral:7b-instruct-v0.2-q4_K_M"
+  },
+  "12": {
+    "comment": "Guter Kompromiss für 12GB VRAM. Llama 3 8B wird möglich.",
+    "classification": "mistral:7b-instruct-v0.2-q4_K_M",
+    "extraction": "llama3:8b-instruct-q4_K_M",
+    "summarization": "llama3:8b-instruct-q4_K_M"
+  },
+  "16": {
+    "comment": "Standard-Setup für 16GB VRAM. Llama 3 8B läuft komfortabel.",
+    "classification": "mistral:7b-instruct-v0.2-q4_K_M",
+    "extraction": "llama3:8b-instruct-q5_K_M",
+    "summarization": "llama3:8b-instruct-q5_K_M"
+  },
+  "24": {
+    "comment": "Leistungsstarkes Setup für 24GB VRAM. Höher quantisierte Modelle.",
+    "classification": "llama3:8b-instruct-q6_K",
+    "extraction": "llama3:8b-instruct-q6_K",
+    "summarization": "mixtral:8x7b-instruct-v0.1-q4_K_M"
+  }
+}

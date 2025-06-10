@@ -1,0 +1,38 @@
+{
+    // Name des Devcontainers, der in VS Code angezeigt wird
+    "name": "Email Connector Devcontainer",
+
+    // Der wichtigste Teil: Verweise auf unsere zentrale docker-compose.yml
+    // Der Pfad ist relativ zu dieser devcontainer.json-Datei.
+    "dockerComposeFile": [
+        "../../docker-compose.yml"
+    ],
+
+    // Gib an, an welchen Service aus der Compose-Datei sich VS Code anhängen soll
+    "service": "email-connector",
+
+    // Der Ordner, der in VS Code geöffnet werden soll, nachdem der Container gestartet wurde.
+    // '/app' ist der WORKDIR, den wir in unserer email_connector/Dockerfile definiert haben.
+    "workspaceFolder": "/app",
+
+    // VS Code Einstellungen und Erweiterungen für diesen Container anpassen
+    "customizations": {
+        "vscode": {
+            // Liste der Erweiterungen, die automatisch im Container installiert werden sollen.
+            // Dies ist extrem nützlich für eine konsistente Entwicklungsumgebung.
+            "extensions": [
+                "ms-python.python",
+                "ms-python.vscode-pylance",
+                "ms-python.debugpy",
+                "charliermarsh.ruff" // Linter und Formatter
+            ]
+        }
+    },
+
+    // Optional: Befehle, die nach dem Erstellen des Containers ausgeführt werden sollen.
+    // Nützlich für Dinge wie das Initialisieren von Git-Hooks etc.
+    // "postCreateCommand": "pip install -r requirements.txt", // In unserem Fall unnötig, da der Dockerfile das schon macht
+
+    // Optional: Leitet den Port vom Container an den Host weiter, damit VS Code ihn erkennt.
+    "forwardPorts": [8000]
+}

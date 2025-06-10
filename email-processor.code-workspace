@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"path": "email_connector"
+		},
+		{
+			"path": "." // Verweist auf das Hauptverzeichnis selbst
+		}
+	],
+	"settings": {}
+}

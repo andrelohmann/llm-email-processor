@@ -1,0 +1,39 @@
+services:
+  ollama:
+    build:
+      context: ./ollama
+      dockerfile: Dockerfile
+    container_name: ollama_service
+    # Lade die Variablen aus der .env-Datei in diesen Service
+    env_file:
+      - .env
+    # Volumes für persistente Speicherung der Modelle
+    volumes:
+      - ollama_data:/root/.ollama
+    # Ports, um die API von ausserhalb des Containers zu erreichen
+    ports:
+      - "11434:11434"
+    # GPU-Zuweisung (erfordert NVIDIA Container Toolkit auf dem Host)
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: unless-stopped
+
+  email-connector:
+    build:
+      context: ./email_connector
+      dockerfile: Dockerfile
+    container_name: email_connector_service
+    env_file:
+      - .env
+    ports:
+      - "8000:8000" # Wir mappen den Port für einfaches Testen
+    restart: unless-stopped
+
+# Definiere ein benanntes Volume für die persistenten Daten
+volumes:
+  ollama_data:
