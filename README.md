@@ -40,7 +40,8 @@ graph TD
         EmailConnector <--> MailServer
         ActionService --> EmailConnector
 
-        LLM_Service --> Ollama[Ollama Container (GPU)]
+        %% KORREKTUR: Der Text des Ollama-Knotens ist jetzt in Anführungszeichen eingeschlossen
+        LLM_Service --> Ollama["Ollama Container (GPU)"]
     end
 
     User[Benutzer] --> UI
