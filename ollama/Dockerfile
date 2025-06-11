@@ -15,11 +15,12 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Kopiere unsere Konfigurations- und Start-Skripte in den Container
-COPY model_config.json /app/model_config.json
+# COPY ../model_config.json /app/model_config.json
 COPY entrypoint.sh /app/entrypoint.sh
+COPY check_readiness.sh /app/check_readiness.sh
 
-# Mach das Start-Skript ausführbar
 RUN chmod +x /app/entrypoint.sh
+RUN chmod +x /app/check_readiness.sh
 
 # Setze unser Skript als den neuen Entrypoint, der beim Container-Start ausgeführt wird
 ENTRYPOINT [ "/app/entrypoint.sh" ]

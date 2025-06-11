@@ -2,10 +2,6 @@ from abc import ABC, abstractmethod
 from typing import List, Dict, Any
 
 class BaseMailAdapter(ABC):
-    @abstractmethod
-    def connect(self):
-        """Stellt die Verbindung zum Mail-Server her."""
-        pass
 
     @abstractmethod
     def fetch_unread_emails(self, folder: str = "INBOX", limit: int = 50, offset: int = 0) -> List[Dict[str, Any]]:

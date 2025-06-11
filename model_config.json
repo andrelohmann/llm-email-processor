@@ -13,9 +13,9 @@
   },
   "16": {
     "comment": "Standard-Setup für 16GB VRAM. Llama 3 8B läuft komfortabel.",
-    "classification": "mistral:7b-instruct-v0.2-q4_K_M",
+    "classification": "granite3.3:8b",
     "extraction": "llama3:8b-instruct-q5_K_M",
-    "summarization": "llama3:8b-instruct-q5_K_M"
+    "summarization": "magistral:latest"
   },
   "24": {
     "comment": "Leistungsstarkes Setup für 24GB VRAM. Höher quantisierte Modelle.",

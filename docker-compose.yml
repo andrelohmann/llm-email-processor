@@ -4,16 +4,13 @@ services:
       context: ./ollama
       dockerfile: Dockerfile
     container_name: ollama_service
-    # Lade die Variablen aus der .env-Datei in diesen Service
     env_file:
       - .env
-    # Volumes für persistente Speicherung der Modelle
     volumes:
       - ollama_data:/root/.ollama
-    # Ports, um die API von ausserhalb des Containers zu erreichen
+      - ./model_config.json:/app/model_config.json:ro
     ports:
       - "11434:11434"
-    # GPU-Zuweisung (erfordert NVIDIA Container Toolkit auf dem Host)
     deploy:
       resources:
         reservations:
@@ -22,6 +19,12 @@ services:
               count: 1
               capabilities: [gpu]
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "/app/check_readiness.sh"]
+      interval: 30s  # Prüft alle 15 Sekunden
+      timeout: 10s   # Gibt dem Skript 10 Sekunden Zeit
+      retries: 60    # Versucht es 30 Mal (ca. 7.5 Minuten), bevor es aufgibt
+      start_period: 120s # Gibt dem Container 60s Zeit zu starten, bevor der erste Check läuft
 
   email-connector:
     build:
@@ -31,9 +34,50 @@ services:
     env_file:
       - .env
     ports:
-      - "8000:8000" # Wir mappen den Port für einfaches Testen
+      - "8000:8000"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/docs || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres_db
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d email_processor_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  orchestrator:
+    build:
+      context: ./orchestrator
+    container_name: orchestrator_service
+    env_file:
+      - .env
+    # KORREKTUR: Der Volume-Pfad zeigt jetzt auf die Datei im Hauptverzeichnis
+    volumes:
+      - ./model_config.json:/app/config/model_config.json:ro
+    depends_on:
+      email-connector:
+        # Wir können hier auch auf den Healthcheck warten, ist sauberer
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      ### NEU: Der Orchestrator muss explizit warten, bis Ollama gesund ist ###
+      ollama:
+        condition: service_healthy
     restart: unless-stopped
 
-# Definiere ein benanntes Volume für die persistenten Daten
 volumes:
   ollama_data:
+  postgres_data:
